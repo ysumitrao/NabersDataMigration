@@ -5,6 +5,9 @@
 			"referenceName": "NABERSStaging",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "staging"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
