@@ -22,7 +22,9 @@
 					"sink": {
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
-						"writeBehavior": "insert"
+						"writeBehavior": "upsert",
+						"externalIdFieldName": "NOCRM_External_ID__c",
+						"ignoreNullValues": false
 					},
 					"enableStaging": false,
 					"translator": {
