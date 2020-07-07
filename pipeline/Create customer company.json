@@ -108,7 +108,7 @@
 							},
 							{
 								"source": {
-									"name": "_defaultCountry"
+									"name": "Country"
 								},
 								"sink": {
 									"name": "ShippingCountry"
