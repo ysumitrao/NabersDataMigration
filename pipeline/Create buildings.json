@@ -99,34 +99,10 @@
 							{
 								"source": {
 									"name": "PostCode",
-									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Postcode__c",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Latitude",
-									"type": "Decimal",
-									"physicalType": "decimal"
-								},
-								"sink": {
-									"name": "Geo_Coordinates__Latitude__s",
-									"type": "Decimal"
-								}
-							},
-							{
-								"source": {
-									"name": "Longitude",
-									"type": "Decimal",
-									"physicalType": "decimal"
-								},
-								"sink": {
-									"name": "Geo_Coordinates__Longitude__s",
-									"type": "Decimal"
+									"name": "Postcode__c"
 								}
 							}
 						],
