@@ -104,6 +104,22 @@
 								"sink": {
 									"name": "Postcode__c"
 								}
+							},
+							{
+								"source": {
+									"name": "Latitude"
+								},
+								"sink": {
+									"name": "Geo_Coordinates__latitude__s"
+								}
+							},
+							{
+								"source": {
+									"name": "Longitude"
+								},
+								"sink": {
+									"name": "Geo_Coordinates__longitude__s"
+								}
 							}
 						],
 						"typeConversion": true,
