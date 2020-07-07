@@ -5,6 +5,12 @@
 			"referenceName": "NabersOnline",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"_defaultCountry": {
+				"type": "string",
+				"defaultValue": "Australia"
+			}
+		},
 		"folder": {
 			"name": "salesforce"
 		},
