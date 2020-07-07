@@ -105,6 +105,14 @@
 									"name": "ShippingPostalCode",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "_defaultCountry"
+								},
+								"sink": {
+									"name": "ShippingCountry"
+								}
 							}
 						],
 						"typeConversion": true,
@@ -128,6 +136,12 @@
 				]
 			}
 		],
+		"variables": {
+			"_defaultCountry": {
+				"type": "String",
+				"defaultValue": "Australia"
+			}
+		},
 		"annotations": []
 	}
 }
