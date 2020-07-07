@@ -1,0 +1,57 @@
+{
+	"name": "db_members_customer_company",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustomerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RegisteredName",
+				"type": "varchar"
+			},
+			{
+				"name": "TradingName",
+				"type": "varchar"
+			},
+			{
+				"name": "ABN",
+				"type": "varchar"
+			},
+			{
+				"name": "StreetNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "StreetName",
+				"type": "varchar"
+			},
+			{
+				"name": "Suburb",
+				"type": "varchar"
+			},
+			{
+				"name": "StateCode",
+				"type": "varchar"
+			},
+			{
+				"name": "PostCode",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CustomerCompanyStage"
+		}
+	}
+}
