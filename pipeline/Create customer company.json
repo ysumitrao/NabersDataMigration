@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Create customer company",
+				"name": "Upsert customer company",
 				"type": "Copy",
 				"dependsOn": [
 					{
