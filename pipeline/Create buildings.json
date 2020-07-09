@@ -65,8 +65,7 @@
 							},
 							{
 								"source": {
-									"name": "PremiseName",
-									"type": "String",
+									"name": "StreetName",
 									"physicalType": "varchar"
 								},
 								"sink": {
