@@ -153,14 +153,7 @@
 			{
 				"name": "Get buildings without SalesforceID",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Create buildings",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -292,6 +285,81 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Copy from Salesforce to Staging",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create buildings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select id, NOCRM_External_ID__c from NO_Building__c",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SalesforceID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "NOCRM_External_ID__c",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "PremiseID",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sf_Building",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "db_members_building",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"variables": {
