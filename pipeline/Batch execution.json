@@ -1,0 +1,41 @@
+{
+	"name": "Batch execution",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create buildings",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create buildings",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Create customer company",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create buildings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create customer company",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
