@@ -138,6 +138,14 @@
 								"sink": {
 									"name": "RecordTypeId"
 								}
+							},
+							{
+								"source": {
+									"name": "CustomerID"
+								},
+								"sink": {
+									"name": "Members_Customer_ID__c"
+								}
 							}
 						],
 						"typeConversion": true,
