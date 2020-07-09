@@ -235,7 +235,7 @@
 								"source": {
 									"type": "SalesforceSource",
 									"query": {
-										"value": "select id from NO_Building__c where NOCRM_External_ID__c= '@{item().PremiseID}'",
+										"value": "select id from NO_Building__c where NOCRM_External_ID__c= @{item().PremiseID}",
 										"type": "Expression"
 									},
 									"readBehavior": "query"
