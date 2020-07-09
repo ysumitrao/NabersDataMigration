@@ -65,7 +65,7 @@
 							},
 							{
 								"source": {
-									"name": "StreetName",
+									"name": "PremiseName",
 									"type": "String",
 									"physicalType": "varchar"
 								},
@@ -119,6 +119,14 @@
 								},
 								"sink": {
 									"name": "Geo_Coordinates__longitude__s"
+								}
+							},
+							{
+								"source": {
+									"name": "PremiseType"
+								},
+								"sink": {
+									"name": "Building_Type__c"
 								}
 							}
 						],
