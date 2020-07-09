@@ -150,9 +150,16 @@
 				]
 			},
 			{
-				"name": "Update Salesforce id in staging",
-				"type": "Copy",
-				"dependsOn": [],
+				"name": "Get buildings without SalesforceID",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Create buildings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -163,48 +170,133 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SalesforceSource",
-						"readBehavior": "query"
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[usp_GetBuildingsWithoutSalesforceID]",
+						"queryTimeout": "02:00:00"
 					},
-					"sink": {
-						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": "[dbo].[usp_UpdateSalesforceIDInBuilding]"
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "Id",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SalesforceID"
-								}
-							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "sf_Building",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
+					"dataset": {
 						"referenceName": "db_members_building",
 						"type": "DatasetReference"
 					}
-				]
+				}
+			},
+			{
+				"name": "Set Variable Buildings",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get buildings without SalesforceID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "_vnewBuildingsInSF",
+					"value": {
+						"value": "@activity('Get buildings without SalesforceID').output.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEachRow",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Set Variable Buildings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('_vnewBuildingsInSF')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Lookup building in Salesforce",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SalesforceSource",
+									"query": {
+										"value": "select id from NO_Building__c where NOCRM_External_ID__c= '@{item().PremiseID}'",
+										"type": "Expression"
+									},
+									"readBehavior": "query"
+								},
+								"dataset": {
+									"referenceName": "sf_Building",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "Update SalesforceID in Buildings",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Lookup building in Salesforce",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[usp_UpdateSalesforceIDInBuilding]",
+								"storedProcedureParameters": {
+									"PremiseID": {
+										"value": {
+											"value": "@item().PremiseId",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"SalesforceID": {
+										"value": {
+											"value": "@activity('Lookup building in Salesforce').output.firstrow.Id",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "NABERSStaging",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
 			}
 		],
+		"variables": {
+			"_vnewBuildingsInSF": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
