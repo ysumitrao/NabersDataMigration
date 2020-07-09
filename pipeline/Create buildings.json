@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedBuildings]",
 						"queryTimeout": "02:00:00"
 					},
 					"sink": {
