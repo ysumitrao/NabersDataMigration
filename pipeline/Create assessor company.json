@@ -115,8 +115,7 @@
 							},
 							{
 								"source": {
-									"name": "Members_Customer_ID__c",
-									"type": "Decimal"
+									"name": "Members_ID__c"
 								},
 								"sink": {
 									"name": "Members_Company_ID__c",
