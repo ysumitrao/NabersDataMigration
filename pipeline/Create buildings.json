@@ -172,7 +172,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id, NOCRM_External_ID__c from NO_Building__c",
+						"query": "select ID, NOCRM_External_ID__c from NO_Building__c",
 						"readBehavior": "query"
 					},
 					"sink": {
