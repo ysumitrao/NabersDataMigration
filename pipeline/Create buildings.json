@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Create buildings",
+				"name": "Upsert buildings",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -155,7 +155,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Create buildings",
+						"activity": "Upsert buildings",
 						"dependencyConditions": [
 							"Succeeded"
 						]

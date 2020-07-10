@@ -33,6 +33,7 @@
 								}
 							}
 						],
+						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedCustomerCompanies]",
 						"queryTimeout": "02:00:00"
 					},
 					"sink": {
