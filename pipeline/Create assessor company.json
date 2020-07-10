@@ -64,7 +64,7 @@
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
 						"writeBehavior": "upsert",
-						"externalIdFieldName": "Members_ID__c",
+						"externalIdFieldName": "Members_Company_ID__c",
 						"ignoreNullValues": false
 					},
 					"enableStaging": false,
@@ -78,8 +78,7 @@
 									"physicalType": "int"
 								},
 								"sink": {
-									"name": "Members_ID__c",
-									"type": "Decimal"
+									"name": "Members_Company_ID__c"
 								}
 							},
 							{
@@ -497,7 +496,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id, Members_ID__c FROM Account",
+						"query": "select id, Members_Company_ID__c FROM Account",
 						"readBehavior": "query"
 					},
 					"sink": {
@@ -523,7 +522,7 @@
 							},
 							{
 								"source": {
-									"name": "Members_ID__c"
+									"name": "Members_Company_ID__c"
 								},
 								"sink": {
 									"name": "Members_Company_ID__c",
