@@ -1,0 +1,187 @@
+{
+	"name": "db_members_asessor_company",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CompanyID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CompanyName",
+				"type": "varchar"
+			},
+			{
+				"name": "ShortName",
+				"type": "varchar"
+			},
+			{
+				"name": "CompanyType",
+				"type": "varchar"
+			},
+			{
+				"name": "MainOfficeLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "CompanyStatus",
+				"type": "varchar"
+			},
+			{
+				"name": "ABN",
+				"type": "varchar"
+			},
+			{
+				"name": "Phone",
+				"type": "varchar"
+			},
+			{
+				"name": "CompanyURL",
+				"type": "varchar"
+			},
+			{
+				"name": "RatingParticipationFlag",
+				"type": "bit"
+			},
+			{
+				"name": "MailingStreet",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingSuburb",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingStateCode",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingPostCode",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingCountry",
+				"type": "varchar"
+			},
+			{
+				"name": "BillingAddressSameAsMailing",
+				"type": "bit"
+			},
+			{
+				"name": "BillingStreet",
+				"type": "varchar"
+			},
+			{
+				"name": "BillingSuburb",
+				"type": "varchar"
+			},
+			{
+				"name": "BillingStateCode",
+				"type": "varchar"
+			},
+			{
+				"name": "BillingPostCode",
+				"type": "varchar"
+			},
+			{
+				"name": "BillingCountry",
+				"type": "varchar"
+			},
+			{
+				"name": "SAPCustomerNo",
+				"type": "varchar"
+			},
+			{
+				"name": "PIInsuranceExpiryDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "PLInsuranceExpiryDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ContractNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "ContractExpiryDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_WA",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_VIC",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_TAS",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_SA",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_QLD",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_NSW",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_ACT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WC_Expiry_NT",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "AssessorCompanyStage"
+		}
+	}
+}
