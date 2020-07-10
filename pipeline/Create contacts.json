@@ -257,6 +257,84 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Copy from Salesforce to Staging",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Upsert contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select id, Members_Contact_ID__c FROM Contact",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[usp_UpdateSalesforceIDInContact]",
+						"sqlWriterTableType": "ContactStageType",
+						"storedProcedureTableTypeParameterName": "ContactStage"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Members_Contact_ID__c",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Members_Contact_ID__c",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sf_contact",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "db_members_contact",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
