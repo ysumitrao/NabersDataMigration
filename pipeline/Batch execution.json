@@ -40,7 +40,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Create buildings",
+						"activity": "Create customer company",
 						"dependencyConditions": [
 							"Succeeded"
 						]
