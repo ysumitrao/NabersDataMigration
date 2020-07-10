@@ -87,8 +87,7 @@
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "ShippingStreet",
-									"type": "String"
+									"name": "ShippingStreet"
 								}
 							},
 							{
