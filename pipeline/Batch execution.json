@@ -34,6 +34,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Create assessor company",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create buildings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create assessor company",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
