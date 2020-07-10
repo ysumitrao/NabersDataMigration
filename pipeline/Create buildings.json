@@ -176,35 +176,14 @@
 						"readBehavior": "query"
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[usp_UpdateSalesforceIDInBuilding]",
+						"sqlWriterTableType": "BuildingStageType",
+						"storedProcedureTableTypeParameterName": "BuildingStage"
 					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "Id",
-									"type": "String"
-								},
-								"sink": {
-									"name": "SalesforceID",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "NOCRM_External_ID__c",
-									"type": "Decimal"
-								},
-								"sink": {
-									"name": "PremiseID",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
