@@ -89,7 +89,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id, Members_Customer_ID__c FROM Account",
+						"query": "select id, Members_ID__c FROM Account",
 						"readBehavior": "query"
 					},
 					"sink": {
