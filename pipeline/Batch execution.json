@@ -40,7 +40,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Create customer company",
+						"activity": "Create buildings",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -50,6 +50,46 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Create assessor company",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Create contact",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create customer company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create contacts",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Create assessor",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create assessor company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create assessors",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
