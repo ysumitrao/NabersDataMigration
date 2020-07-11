@@ -444,6 +444,77 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Copy from Salesforce to Staging",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select id, Members_Assessor_ID__c FROM Contact",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[usp_UpdateSalesforceIDInAssessor]",
+						"sqlWriterTableType": "AssessorStageType",
+						"storedProcedureTableTypeParameterName": "AssessorStage"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Members_Assessor_ID__c",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "Members_Assessor_ID__c",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sf_Assessor",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "db_members_assessor",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
