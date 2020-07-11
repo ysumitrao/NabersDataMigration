@@ -1,0 +1,194 @@
+{
+	"name": "db_members_assessor",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AssessorID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CompanyID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FirstName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastName",
+				"type": "varchar"
+			},
+			{
+				"name": "Position",
+				"type": "varchar"
+			},
+			{
+				"name": "Email",
+				"type": "varchar"
+			},
+			{
+				"name": "ShowEmailToPublicFlag",
+				"type": "bit"
+			},
+			{
+				"name": "Phone",
+				"type": "varchar"
+			},
+			{
+				"name": "ShowPhoneToPublicFlag",
+				"type": "bit"
+			},
+			{
+				"name": "AccountManagerFlag",
+				"type": "bit"
+			},
+			{
+				"name": "OfficeFlag",
+				"type": "bit"
+			},
+			{
+				"name": "RetailFlag",
+				"type": "bit"
+			},
+			{
+				"name": "HotelFlag",
+				"type": "bit"
+			},
+			{
+				"name": "DataCentreFlag",
+				"type": "bit"
+			},
+			{
+				"name": "ApartmentBuildingFlag",
+				"type": "bit"
+			},
+			{
+				"name": "HospitalFlag",
+				"type": "bit"
+			},
+			{
+				"name": "CarbonNeutralComponentFlag",
+				"type": "bit"
+			},
+			{
+				"name": "AccreditationNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "AccreditationExpiryDate",
+				"type": "date"
+			},
+			{
+				"name": "JoinedDate",
+				"type": "date"
+			},
+			{
+				"name": "CBDFlag",
+				"type": "bit"
+			},
+			{
+				"name": "SupervisorFlag",
+				"type": "bit"
+			},
+			{
+				"name": "EnergyFlag",
+				"type": "bit"
+			},
+			{
+				"name": "WaterFlag",
+				"type": "bit"
+			},
+			{
+				"name": "IEFlag",
+				"type": "bit"
+			},
+			{
+				"name": "WasteFlag",
+				"type": "bit"
+			},
+			{
+				"name": "RequireSupervisionOffice",
+				"type": "bit"
+			},
+			{
+				"name": "RequireSupervisionSC",
+				"type": "bit"
+			},
+			{
+				"name": "RequireSupervisionHotel",
+				"type": "bit"
+			},
+			{
+				"name": "RequireSupervisionDC",
+				"type": "bit"
+			},
+			{
+				"name": "RequireSupervisionAB",
+				"type": "bit"
+			},
+			{
+				"name": "Metro_Availability",
+				"type": "varchar"
+			},
+			{
+				"name": "Regional_Availability",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingStreet",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingSuburb",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingStateCode",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingPostCode",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingCountry",
+				"type": "varchar"
+			},
+			{
+				"name": "MailingLatitude",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 7
+			},
+			{
+				"name": "MailingLongitude",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 7
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "AssessorStage"
+		}
+	}
+}
