@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nabers-Migration-DF"
+		},
+		"NABERSStaging_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'NABERSStaging'"
+		},
+		"NabersOnline_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'NabersOnline'"
+		},
+		"NabersOnline_securityToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'securityToken' of 'NabersOnline'"
+		},
+		"NabersOnline_properties_typeProperties_environmentUrl": {
+			"type": "string",
+			"defaultValue": "https://nabers--sumitdm.my.salesforce.com/"
+		},
+		"NabersOnline_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "sumit.yadam@nabers.com.sumitdm"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"NABERSStaging_connectionString": {
+						"value": "[parameters('NABERSStaging_connectionString')]"
+					},
+					"NabersOnline_password": {
+						"value": "[parameters('NabersOnline_password')]"
+					},
+					"NabersOnline_securityToken": {
+						"value": "[parameters('NabersOnline_securityToken')]"
+					},
+					"NabersOnline_properties_typeProperties_environmentUrl": {
+						"value": "[parameters('NabersOnline_properties_typeProperties_environmentUrl')]"
+					},
+					"NabersOnline_properties_typeProperties_username": {
+						"value": "[parameters('NabersOnline_properties_typeProperties_username')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
