@@ -1,0 +1,78 @@
+{
+	"name": "Create assessors",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get assessor record type",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": {
+							"value": "Select id from RecordType where sObjectType = 'Contact' and DeveloperName = 'NO_Assessor'",
+							"type": "Expression"
+						},
+						"readBehavior": "query"
+					},
+					"dataset": {
+						"referenceName": "sf_Assessor",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Upsert assessor",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get assessor record type",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"additionalColumns": [
+							{
+								"name": "RecordTypeID",
+								"value": {
+									"value": "@activity('Get assessor record type').output.firstrow.Id",
+									"type": "Expression"
+								}
+							}
+						],
+						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedAssessors]",
+						"queryTimeout": "02:00:00"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "db_members_assessor",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
