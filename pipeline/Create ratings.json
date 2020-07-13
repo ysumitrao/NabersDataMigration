@@ -37,6 +37,26 @@
 							{
 								"name": "Review_summary_page__c",
 								"value": "complete"
+							},
+							{
+								"name": "Area_Data_Copy_Status__c",
+								"value": "Copy rejected"
+							},
+							{
+								"name": "Electricity_Data_Clone_Status__c",
+								"value": "Copy rejected"
+							},
+							{
+								"name": "Gas_Data_Copy_Status__c",
+								"value": "Copy rejected"
+							},
+							{
+								"name": "Diesel_Data_Copy_Status__c",
+								"value": "Copy rejected"
+							},
+							{
+								"name": "Water_Data_Copy_Status__c",
+								"value": "Copy rejected"
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedRatings]",
@@ -386,6 +406,51 @@
 								},
 								"sink": {
 									"name": "Review_summary_page__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Area_Data_Copy_Status__c"
+								},
+								"sink": {
+									"name": "Area_Data_Copy_Status__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Electricity_Data_Clone_Status__c"
+								},
+								"sink": {
+									"name": "Electricity_Data_Clone_Status__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Gas_Data_Copy_Status__c"
+								},
+								"sink": {
+									"name": "Gas_Data_Copy_Status__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Diesel_Data_Copy_Status__c"
+								},
+								"sink": {
+									"name": "Diesel_Data_Copy_Status__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Water_Data_Copy_Status__c"
+								},
+								"sink": {
+									"name": "Water_Data_Copy_Status__c",
 									"type": "String"
 								}
 							}
