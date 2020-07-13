@@ -427,6 +427,14 @@
 									"name": "RecordTypeId",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "status"
+								},
+								"sink": {
+									"name": "NO_User_Status__c"
+								}
 							}
 						],
 						"typeConversion": true,
