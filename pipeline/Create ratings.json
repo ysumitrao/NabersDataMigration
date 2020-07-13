@@ -325,6 +325,47 @@
 									"name": "Customer__c",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "Rating_details_page__c"
+								},
+								"sink": {
+									"name": "Rating_details_page__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Rating_information_page__c"
+								},
+								"sink": {
+									"name": "Rating_information_page__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Building_details_page__c"
+								},
+								"sink": {
+									"name": "Building_details_page__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Customer_details_page__c"
+								},
+								"sink": {
+									"name": "Customer_details_page__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Review_summary_page__c"
+								}
 							}
 						],
 						"typeConversion": true,
