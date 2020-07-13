@@ -58,10 +58,6 @@
 									"value": "@activity('Get assessor record type').output.firstrow.Id",
 									"type": "Expression"
 								}
-							},
-							{
-								"name": "Status_Active",
-								"value": "Active"
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedAssessors]",
@@ -426,14 +422,6 @@
 								"sink": {
 									"name": "RecordTypeId",
 									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Status_Active"
-								},
-								"sink": {
-									"name": "NO_User_Status__c"
 								}
 							}
 						],
