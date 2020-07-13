@@ -94,6 +94,52 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Create ratings",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Create assessor",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create ratings",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Create building rating relationship",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create building rating relationship",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
