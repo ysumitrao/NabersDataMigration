@@ -1,0 +1,53 @@
+{
+	"name": "db_members_officer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AdministratorID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FirstName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastName",
+				"type": "varchar"
+			},
+			{
+				"name": "Email",
+				"type": "varchar"
+			},
+			{
+				"name": "Alias",
+				"type": "varchar"
+			},
+			{
+				"name": "NickName",
+				"type": "varchar"
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OfficerStage"
+		}
+	}
+}
