@@ -1,0 +1,175 @@
+{
+	"name": "db_members_rating",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "RatingHeaderID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CustomerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PremiseID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AssessorID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RatingReferenceNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "PremiseType",
+				"type": "varchar"
+			},
+			{
+				"name": "HasEnergy",
+				"type": "bit"
+			},
+			{
+				"name": "HasWater",
+				"type": "bit"
+			},
+			{
+				"name": "HasIE",
+				"type": "bit"
+			},
+			{
+				"name": "RatingScope",
+				"type": "varchar"
+			},
+			{
+				"name": "CBDFlag",
+				"type": "bit"
+			},
+			{
+				"name": "CitySwitchFlag",
+				"type": "bit"
+			},
+			{
+				"name": "VoluntaryRatingFlag",
+				"type": "bit"
+			},
+			{
+				"name": "PublicListingFlag",
+				"type": "bit"
+			},
+			{
+				"name": "OfficerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RatingStatus",
+				"type": "varchar"
+			},
+			{
+				"name": "LodgedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CertificateValidFrom",
+				"type": "date"
+			},
+			{
+				"name": "CertificateValidTo",
+				"type": "date"
+			},
+			{
+				"name": "CertificationDate",
+				"type": "date"
+			},
+			{
+				"name": "EnergyStarRating",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 1
+			},
+			{
+				"name": "EnergyIntensity",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "GHGEmissionsScope123",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "BenchmarkingFactor",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "EnergyStarRatingWoGreenPower",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 1
+			},
+			{
+				"name": "GreenPowerPercent",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 2
+			},
+			{
+				"name": "GHGEmissionsScope123WoGP",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "BenchmarkingFactorWoGP",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "WaterStarRating",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 1
+			},
+			{
+				"name": "WaterStarRatingWoRW",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 1
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "RatingStage"
+		}
+	}
+}
