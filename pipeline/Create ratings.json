@@ -328,6 +328,24 @@
 							},
 							{
 								"source": {
+									"name": "BuildingNameOnCertificate"
+								},
+								"sink": {
+									"name": "Building_Name_On_Certificate__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerNameOnCertificate"
+								},
+								"sink": {
+									"name": "Customer_Name_On_Certificate__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "Rating_details_page__c"
 								},
 								"sink": {
@@ -365,6 +383,10 @@
 							{
 								"source": {
 									"name": "Review_summary_page__c"
+								},
+								"sink": {
+									"name": "Review_summary_page__c",
+									"type": "String"
 								}
 							}
 						],
