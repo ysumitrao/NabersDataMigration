@@ -143,17 +143,6 @@
 							},
 							{
 								"source": {
-									"name": "OfficerID",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "Tech_Officer__c",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
 									"name": "RatingStatus",
 									"type": "String",
 									"physicalType": "varchar"
@@ -330,7 +319,14 @@
 			{
 				"name": "Copy from Salesforce to Staging",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Upsert ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
