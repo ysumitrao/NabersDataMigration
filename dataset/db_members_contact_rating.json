@@ -1,0 +1,42 @@
+{
+	"name": "db_members_contact_rating",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "RatingHeaderID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ContactID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Members_ID",
+				"type": "varchar"
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ContactRatingStage"
+		}
+	}
+}
