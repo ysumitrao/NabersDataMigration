@@ -154,6 +154,15 @@
 							},
 							{
 								"source": {
+									"name": "RatingPeriodFrom"
+								},
+								"sink": {
+									"name": "Rating_Start_Date__c",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
 									"name": "LodgedDate",
 									"type": "DateTime",
 									"physicalType": "datetime"
