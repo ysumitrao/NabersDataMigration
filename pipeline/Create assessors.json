@@ -430,7 +430,7 @@
 							},
 							{
 								"source": {
-									"name": "status"
+									"name": "Status_Active"
 								},
 								"sink": {
 									"name": "NO_User_Status__c"
