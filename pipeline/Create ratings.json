@@ -17,6 +17,28 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"additionalColumns": [
+							{
+								"name": "Rating_details_page__c",
+								"value": "complete"
+							},
+							{
+								"name": "Rating_information_page__c",
+								"value": "complete"
+							},
+							{
+								"name": "Building_details_page__c",
+								"value": "complete"
+							},
+							{
+								"name": "Customer_details_page__c",
+								"value": "complete"
+							},
+							{
+								"name": "Review_summary_page__c",
+								"value": "complete"
+							}
+						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedRatings]",
 						"queryTimeout": "02:00:00"
 					},
