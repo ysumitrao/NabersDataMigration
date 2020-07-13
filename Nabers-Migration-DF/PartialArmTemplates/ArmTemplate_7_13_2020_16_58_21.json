@@ -1,0 +1,1017 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nabers-Migration-DF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Batch execution')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Create buildings",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create buildings",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create customer company",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create buildings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create customer company",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create assessor company",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create buildings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create assessor company",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create contact",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create customer company",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create contacts",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create assessor",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create assessor company",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create assessors",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create ratings",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create contact",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Create assessor",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create ratings",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "Create building rating relationship",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Create ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Create building rating relationship",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Create ratings')]",
+				"[concat(variables('factoryId'), '/pipelines/Create building rating relationship')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/db_members_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PremiseID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AssessorID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RatingReferenceNumber",
+						"type": "varchar"
+					},
+					{
+						"name": "PremiseType",
+						"type": "varchar"
+					},
+					{
+						"name": "HasEnergy",
+						"type": "bit"
+					},
+					{
+						"name": "HasWater",
+						"type": "bit"
+					},
+					{
+						"name": "HasIE",
+						"type": "bit"
+					},
+					{
+						"name": "RatingScope",
+						"type": "varchar"
+					},
+					{
+						"name": "CBDFlag",
+						"type": "bit"
+					},
+					{
+						"name": "CitySwitchFlag",
+						"type": "bit"
+					},
+					{
+						"name": "VoluntaryRatingFlag",
+						"type": "bit"
+					},
+					{
+						"name": "PublicListingFlag",
+						"type": "bit"
+					},
+					{
+						"name": "OfficerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RatingStatus",
+						"type": "varchar"
+					},
+					{
+						"name": "LodgedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CertificateValidFrom",
+						"type": "date"
+					},
+					{
+						"name": "CertificateValidTo",
+						"type": "date"
+					},
+					{
+						"name": "CertificationDate",
+						"type": "date"
+					},
+					{
+						"name": "EnergyStarRating",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 1
+					},
+					{
+						"name": "EnergyIntensity",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "GHGEmissionsScope123",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "BenchmarkingFactor",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "EnergyStarRatingWoGreenPower",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 1
+					},
+					{
+						"name": "GreenPowerPercent",
+						"type": "decimal",
+						"precision": 5,
+						"scale": 2
+					},
+					{
+						"name": "GHGEmissionsScope123WoGP",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "BenchmarkingFactorWoGP",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "WaterStarRating",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 1
+					},
+					{
+						"name": "WaterStarRatingWoRW",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 1
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "RatingStage"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sf_Rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NabersOnline",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "salesforce"
+				},
+				"annotations": [],
+				"type": "SalesforceObject",
+				"schema": [],
+				"typeProperties": {
+					"objectApiName": "NO_Rating__c"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create ratings')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "NO_Member_Rating_Id__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingHeaderID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "NO_Member_Rating_Id__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingReferenceNumber",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Member_Rating_Ref_Number__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PremiseType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingScope",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Scope__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MainPurposeOfRating",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Main_purpose_of_rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestEnergyVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Energy_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestWaterVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Water_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestIEVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_IE_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PublicListingFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "Rating_Publicly_Listed__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingStatus",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingPeriodFrom"
+										},
+										"sink": {
+											"name": "Rating_Start_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "LodgedDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "Lodge_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidFrom",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_From_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidTo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_To_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificationDate",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Certified_On_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_With_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyIntensity",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Intensity__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Greenhouse_Gas_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRatingWoGreenPower",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_Without_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123WoGP",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "No_GreenPower_GHG_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_With_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRatingWoRW",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_Without_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CompanySalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Customer__c",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, NO_Member_Rating_Id__c from\nNO_Rating__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInRating]",
+								"sqlWriterTableType": "RatingStageType",
+								"storedProcedureTableTypeParameterName": "RatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NO_Member_Rating_Id__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "NO_Member_Rating_Id__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/db_members_rating')]",
+				"[concat(variables('factoryId'), '/datasets/sf_Rating')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sf_building_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NabersOnline",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "salesforce"
+				},
+				"annotations": [],
+				"type": "SalesforceObject",
+				"schema": [],
+				"typeProperties": {
+					"objectApiName": "NO_Building_Rating_Relationship__c"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/db_members_building_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PremiseID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "BuildingRatingStage"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create building rating relationship')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert building ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedBuildingRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "Members_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID"
+										},
+										"sink": {
+											"name": "Members_ID__c"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_building_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_building_rating",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert building ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "SELECT id, Members_ID__c FROM NO_Building_Rating_Relationship__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInBuildingRating]",
+								"sqlWriterTableType": "BuildingRatingStageType",
+								"storedProcedureTableTypeParameterName": "BuildingRatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID__c",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Members_ID__c",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_building_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_building_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/db_members_building_rating')]",
+				"[concat(variables('factoryId'), '/datasets/sf_building_rating')]"
+			]
+		}
+	]
+}
