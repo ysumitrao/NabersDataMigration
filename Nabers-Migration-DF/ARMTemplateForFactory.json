@@ -2154,7 +2154,7 @@
 									},
 									{
 										"source": {
-											"name": "Members_ID__c"
+											"name": "Members_Customer_ID__c"
 										},
 										"sink": {
 											"name": "Members_Customer_ID__c",
@@ -3202,6 +3202,48 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "Rating_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Rating_information_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Building_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Customer_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Review_summary_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Area_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Electricity_Data_Clone_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Gas_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Diesel_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Water_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									}
+								],
 								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedRatings]",
 								"queryTimeout": "02:00:00"
 							},
@@ -3486,6 +3528,114 @@
 										},
 										"sink": {
 											"name": "Customer__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingNameOnCertificate"
+										},
+										"sink": {
+											"name": "Building_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerNameOnCertificate"
+										},
+										"sink": {
+											"name": "Customer_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_details_page__c"
+										},
+										"sink": {
+											"name": "Rating_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_information_page__c"
+										},
+										"sink": {
+											"name": "Rating_information_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Building_details_page__c"
+										},
+										"sink": {
+											"name": "Building_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer_details_page__c"
+										},
+										"sink": {
+											"name": "Customer_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Review_summary_page__c"
+										},
+										"sink": {
+											"name": "Review_summary_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Area_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Area_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Electricity_Data_Clone_Status__c"
+										},
+										"sink": {
+											"name": "Electricity_Data_Clone_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Gas_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Gas_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Diesel_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Diesel_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Water_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Water_Data_Copy_Status__c",
 											"type": "String"
 										}
 									}
