@@ -117,6 +117,84 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Copy from Salesforce to Staging",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Upsert contact ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "SELECT id, Members_ID__c FROM NO_Rating_Contact__c",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[usp_UpdateSalesforceIDInContactRating]",
+						"sqlWriterTableType": "ContactRatingStageType",
+						"storedProcedureTableTypeParameterName": "ContactRatingStage"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Members_ID__c",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Members_ID__c",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sf_contact_rataing",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "db_members_contact_rating",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
