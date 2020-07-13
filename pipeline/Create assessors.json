@@ -58,6 +58,10 @@
 									"value": "@activity('Get assessor record type').output.firstrow.Id",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "Status_Active",
+								"value": "Active"
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedAssessors]",
