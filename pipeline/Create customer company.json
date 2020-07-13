@@ -240,7 +240,7 @@
 							},
 							{
 								"source": {
-									"name": "Members_ID__c"
+									"name": "Members_Customer_ID__c"
 								},
 								"sink": {
 									"name": "Members_Customer_ID__c",
