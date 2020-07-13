@@ -253,17 +253,6 @@
 							},
 							{
 								"source": {
-									"name": "GreenPowerPercent",
-									"type": "Decimal",
-									"physicalType": "decimal"
-								},
-								"sink": {
-									"name": "Total_Green_Power_Consumption__c",
-									"type": "Decimal"
-								}
-							},
-							{
-								"source": {
 									"name": "GHGEmissionsScope123WoGP",
 									"type": "Decimal",
 									"physicalType": "decimal"
