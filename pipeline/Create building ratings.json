@@ -104,7 +104,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "SELECT id, Rating__r.NO_Member_Rating_Id__c FROM NO_Building_Rating_Relationship__c",
+						"query": "SELECT id, Members_ID__c FROM NO_Building_Rating_Relationship__c",
 						"readBehavior": "query"
 					},
 					"sink": {
@@ -130,13 +130,13 @@
 							},
 							{
 								"source": {
-									"name": "Rating__r.NO_Member_Rating_Id__c",
-									"type": "Decimal"
+									"name": "Members_ID__c",
+									"type": "String"
 								},
 								"sink": {
-									"name": "NO_Member_Rating_Id__c",
-									"type": "Int32",
-									"physicalType": "int"
+									"name": "Members_ID__c",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							}
 						],
