@@ -1,0 +1,38 @@
+{
+	"name": "db_members_officer_rating",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NABERSStaging",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "staging"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "RatingHeaderID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OfficerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RowTimeStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesforceID",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OfficerRatingStage"
+		}
+	}
+}
