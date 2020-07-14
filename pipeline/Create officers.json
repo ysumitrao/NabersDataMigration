@@ -78,7 +78,7 @@
 									"physicalType": "int"
 								},
 								"sink": {
-									"name": "NO_Members_Officer_ID"
+									"name": "NO_Members_Officer_ID__c"
 								}
 							},
 							{
