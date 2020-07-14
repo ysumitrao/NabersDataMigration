@@ -70,6 +70,16 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "AdministratorID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "NO_Members_Officer_ID"
+								}
+							},
+							{
+								"source": {
 									"name": "FirstName",
 									"type": "String",
 									"physicalType": "varchar"
