@@ -38,7 +38,7 @@
 							{
 								"name": "Role",
 								"value": {
-									"value": "@activity('Get officer role').output.value",
+									"value": "@activity('Get officer role').output.firstrow.Id",
 									"type": "Expression"
 								}
 							},
@@ -49,7 +49,7 @@
 							{
 								"name": "Profile",
 								"value": {
-									"value": "@activity('Get officer profile').output.value",
+									"value": "@activity('Get officer profile').output.firstrow.Id",
 									"type": "Expression"
 								}
 							}
