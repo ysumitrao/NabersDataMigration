@@ -61,7 +61,10 @@
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
 						"writeBehavior": "upsert",
-						"externalIdFieldName": "NO_Members_Officer_ID__c",
+						"externalIdFieldName": {
+							"value": "NO_Members_Officer_ID__c",
+							"type": "Expression"
+						},
 						"ignoreNullValues": false
 					},
 					"enableStaging": false,
