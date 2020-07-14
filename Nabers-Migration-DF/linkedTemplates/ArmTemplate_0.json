@@ -920,6 +920,154 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/db_members_contact_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Members_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ContactRatingStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/db_members_officer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "AdministratorID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "varchar"
+					},
+					{
+						"name": "LastName",
+						"type": "varchar"
+					},
+					{
+						"name": "Email",
+						"type": "varchar"
+					},
+					{
+						"name": "Alias",
+						"type": "varchar"
+					},
+					{
+						"name": "NickName",
+						"type": "varchar"
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OfficerStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/db_members_officer_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OfficerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OfficerRatingStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sf_Assessor')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1078,1363 +1226,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/NabersOnline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Create assessor company')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get assessor record type",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "Select id from RecordType where sObjectType = 'Account' and DeveloperName = 'NO_Assessor_Company'",
-								"readBehavior": "query"
-							},
-							"dataset": {
-								"referenceName": "sf_assessor_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Upsert assessor company",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Get assessor record type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"additionalColumns": [
-									{
-										"name": "RecordTypeID",
-										"value": {
-											"value": "@activity('Get assessor record type').output.firstrow.Id",
-											"type": "Expression"
-										}
-									}
-								],
-								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedAssessorCompanies]",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "SalesforceSink",
-								"writeBatchSize": 5000,
-								"writeBehavior": "upsert",
-								"externalIdFieldName": "Members_Company_ID__c",
-								"ignoreNullValues": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CompanyID",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Members_Company_ID__c"
-										}
-									},
-									{
-										"source": {
-											"name": "CompanyName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ShortName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Short_Name__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CompanyType",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Organisation_Type__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MainOfficeLocation",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Main_Office_Location__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CompanyStatus",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Record_status__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ABN",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_ABN__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Phone",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Phone",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CompanyURL",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Website",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RatingParticipationFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Rating_Participation__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingStreet",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ShippingStreet",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingSuburb",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ShippingCity",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingStateCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ShippingState",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingPostCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ShippingPostalCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingCountry",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ShippingCountry",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingAddressSameAsMailing",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Is_Mailing_and_Billing_Address_same__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingStreet",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BillingStreet",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingSuburb",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BillingCity",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingStateCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BillingState",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingPostCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BillingPostalCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BillingCountry",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "BillingCountry",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SAPCustomerNo",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_SAP_Customer_Number__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PIInsuranceExpiryDate",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Professional_Indemnity_Expiry_Date__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "PLInsuranceExpiryDate",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Public_Liability_Expiry_Date__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ContractNumber",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Company_Contract_Number__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ContractExpiryDate",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Contract_Expiry_Date__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_WA",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_WA__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_VIC",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_VIC__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_TAS",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_TAS__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_SA",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_SA__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_QLD",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_QLD__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_NSW",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_NSW__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_ACT",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_ACT__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "WC_Expiry_NT",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "NO_Workers_Compensation_Expiry_Date_NT__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "RecordTypeID"
-										},
-										"sink": {
-											"name": "RecordTypeId",
-											"type": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "db_members_asessor_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sf_assessor_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy from Salesforce to Staging",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Upsert assessor company",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "select id, Members_Company_ID__c FROM Account",
-								"readBehavior": "query"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInAssessorCompany]",
-								"sqlWriterTableType": "AssessorCompanyStageType",
-								"storedProcedureTableTypeParameterName": "AssessorCompanyStage"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Id",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Members_Company_ID__c"
-										},
-										"sink": {
-											"name": "Members_Company_ID__c",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "sf_assessor_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "db_members_asessor_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sf_assessor_company')]",
-				"[concat(variables('factoryId'), '/datasets/db_members_asessor_company')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Create assessors')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get assessor record type",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": {
-									"value": "Select id from RecordType where sObjectType = 'Contact' and DeveloperName = 'NO_Assessor'",
-									"type": "Expression"
-								},
-								"readBehavior": "query"
-							},
-							"dataset": {
-								"referenceName": "sf_Assessor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Upsert assessor",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Get assessor record type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"additionalColumns": [
-									{
-										"name": "RecordTypeID",
-										"value": {
-											"value": "@activity('Get assessor record type').output.firstrow.Id",
-											"type": "Expression"
-										}
-									}
-								],
-								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedAssessors]",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "SalesforceSink",
-								"writeBatchSize": 5000,
-								"writeBehavior": "upsert",
-								"externalIdFieldName": "Members_Assessor_ID__c",
-								"ignoreNullValues": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "AssessorID",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Members_Assessor_ID__c",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "FirstName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "FirstName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LastName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "LastName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Position",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Position__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Email",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Email",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ShowEmailToPublicFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Show_Email_To_Public__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "Phone",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Phone",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ShowPhoneToPublicFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Show_Business_Phone_To_Public__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "AccountManagerFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Account_Manager__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "Accreditation",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Accreditation__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AccreditationNumber",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Accreditation_Number__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "AccreditationExpiryDate",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "NO_Accreditation_Expiry_Date__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "JoinedDate",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "NO_Join_date__c",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "CBDFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Share_Info_With_CBD__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "SupervisorFlag",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervisor__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RatingType",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Rating_Types__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RequireSupervisionOffice",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervision_Energy_Offices__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RequireSupervisionSC",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervision_Energy_Shopping_Centres__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RequireSupervisionHotel",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervision_Energy_Hotels__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RequireSupervisionDC",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervision_Energy_Data_Centres__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "RequireSupervisionAB",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "NO_Supervision_Energy_AB__c",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "Metro_Availability",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Metropolitan__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Regional_Availability",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "NO_Regional__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingStreet",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MailingStreet",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingSuburb",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MailingCity",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingStateCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MailingState",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingPostCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MailingPostalCode",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingCountry",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MailingCountry",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingLatitude",
-											"type": "Decimal",
-											"physicalType": "decimal"
-										},
-										"sink": {
-											"name": "MailingLatitude",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "MailingLongitude",
-											"type": "Decimal",
-											"physicalType": "decimal"
-										},
-										"sink": {
-											"name": "MailingLongitude",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "CompanySalesforceID",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "AccountId",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RecordTypeID"
-										},
-										"sink": {
-											"name": "RecordTypeId",
-											"type": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "db_members_assessor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sf_Assessor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy from Salesforce to Staging",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Upsert assessor",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "select id, Members_Assessor_ID__c FROM Contact",
-								"readBehavior": "query"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInAssessor]",
-								"sqlWriterTableType": "AssessorStageType",
-								"storedProcedureTableTypeParameterName": "AssessorStage"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Id",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Members_Assessor_ID__c",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "Members_Assessor_ID__c",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "sf_Assessor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "db_members_assessor",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/sf_Assessor')]",
-				"[concat(variables('factoryId'), '/datasets/db_members_assessor')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Create buildings')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Upsert buildings",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedBuildings]",
-								"queryTimeout": "02:00:00"
-							},
-							"sink": {
-								"type": "SalesforceSink",
-								"writeBatchSize": 5000,
-								"writeBehavior": "upsert",
-								"externalIdFieldName": "NOCRM_External_ID__c",
-								"ignoreNullValues": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "PremiseID",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "NOCRM_External_ID__c",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"name": "PremiseName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StreetNumber",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Street_Number__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StreetName",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Street_Name__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Suburb",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Suburb__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "StateCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "State__c",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PostCode",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Postcode__c"
-										}
-									},
-									{
-										"source": {
-											"name": "Latitude"
-										},
-										"sink": {
-											"name": "Geo_Coordinates__latitude__s"
-										}
-									},
-									{
-										"source": {
-											"name": "Longitude"
-										},
-										"sink": {
-											"name": "Geo_Coordinates__longitude__s"
-										}
-									},
-									{
-										"source": {
-											"name": "PremiseType"
-										},
-										"sink": {
-											"name": "Building_Type__c"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "db_members_building",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "sf_Building",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy from Salesforce to Staging",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Upsert buildings",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SalesforceSource",
-								"query": "select ID, NOCRM_External_ID__c from NO_Building__c",
-								"readBehavior": "query"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInBuilding]",
-								"sqlWriterTableType": "BuildingStageType",
-								"storedProcedureTableTypeParameterName": "BuildingStage"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Id",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "NOCRM_External_ID__c",
-											"type": "Decimal"
-										},
-										"sink": {
-											"name": "NOCRM_External_ID__c",
-											"type": "Int32",
-											"physicalType": "int"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "sf_Building",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "db_members_building",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"variables": {
-					"_vnewBuildingsInSF": {
-						"type": "Array"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/db_members_building')]",
-				"[concat(variables('factoryId'), '/datasets/sf_Building')]"
 			]
 		}
 	]
