@@ -507,6 +507,15 @@
 									"name": "Customer_Aware_Of_Star_Rating__c",
 									"type": "Boolean"
 								}
+							},
+							{
+								"source": {
+									"name": "UserSalesforceID"
+								},
+								"sink": {
+									"name": "OwnerId",
+									"type": "String"
+								}
 							}
 						],
 						"typeConversion": true,
