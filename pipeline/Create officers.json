@@ -48,7 +48,10 @@
 							},
 							{
 								"name": "Profile",
-								"value": ""
+								"value": {
+									"value": "@activity('Get officer profile').output.value",
+									"type": "Expression"
+								}
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedOfficers]",
@@ -136,11 +139,6 @@
 								"sink": {
 									"name": "UserRoleId",
 									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "UserLicense"
 								}
 							},
 							{
