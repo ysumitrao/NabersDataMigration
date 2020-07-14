@@ -212,6 +212,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
+						"query": "select Id from profile where name = 'Nabers Internal User'",
 						"readBehavior": "query"
 					},
 					"dataset": {
