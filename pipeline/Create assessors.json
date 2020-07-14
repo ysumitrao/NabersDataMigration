@@ -551,13 +551,6 @@
 								"value": "false"
 							},
 							{
-								"name": "Role",
-								"value": {
-									"value": "@activity('Get assessor role').output.firstrow.Id",
-									"type": "Expression"
-								}
-							},
-							{
 								"name": "UserLicense",
 								"value": ""
 							},
