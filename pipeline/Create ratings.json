@@ -453,6 +453,15 @@
 									"name": "Water_Data_Copy_Status__c",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "POReferenceNo"
+								},
+								"sink": {
+									"name": "Reference_For_Invoicing__c",
+									"type": "String"
+								}
 							}
 						],
 						"typeConversion": true,
