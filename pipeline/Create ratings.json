@@ -462,6 +462,51 @@
 									"name": "Reference_For_Invoicing__c",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "DataAccuracyFlag"
+								},
+								"sink": {
+									"name": "Assessor_Declaration__c",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "ConflictOfInterestFlag"
+								},
+								"sink": {
+									"name": "Conflict_Of_Interest__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "InComplianceWithCurrentRules"
+								},
+								"sink": {
+									"name": "Compliant_With_Rules__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ComplianceExplanation"
+								},
+								"sink": {
+									"name": "Explain_Why_Not_Compliant__c",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerAwareOfStarRating"
+								},
+								"sink": {
+									"name": "Customer_Aware_Of_Star_Rating__c",
+									"type": "Boolean"
+								}
 							}
 						],
 						"typeConversion": true,
