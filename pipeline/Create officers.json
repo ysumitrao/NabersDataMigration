@@ -5,7 +5,14 @@
 			{
 				"name": "Upsert officers",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get officer role",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -24,7 +31,10 @@
 							},
 							{
 								"name": "Role",
-								"value": ""
+								"value": {
+									"value": "@activity('Get officer role').output.value",
+									"type": "Expression"
+								}
 							},
 							{
 								"name": "UserLicense",
