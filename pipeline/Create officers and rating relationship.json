@@ -241,7 +241,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "sf_officer",
+						"referenceName": "sf_user",
 						"type": "DatasetReference"
 					}
 				]
