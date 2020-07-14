@@ -570,6 +570,30 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Get assessor profile",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select Id from profile where name = 'NO Community Assessor'",
+						"readBehavior": "query"
+					},
+					"dataset": {
+						"referenceName": "sf_user",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"annotations": []
