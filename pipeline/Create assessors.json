@@ -824,7 +824,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id from UserRole WHERE Name = 'CRM Role'",
+						"query": "select Id, Account.Owner.UserRoleId from Contact",
 						"readBehavior": "query"
 					},
 					"dataset": {
