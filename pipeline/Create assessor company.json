@@ -55,6 +55,10 @@
 									"value": "@activity('Get assessor record type').output.firstrow.Id",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "IsCustomerPortal",
+								"value": "true"
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedAssessorCompanies]",
@@ -451,6 +455,14 @@
 								"sink": {
 									"name": "RecordTypeId",
 									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IsCustomerPortal"
+								},
+								"sink": {
+									"name": "IsCustomerPortal"
 								}
 							}
 						],
