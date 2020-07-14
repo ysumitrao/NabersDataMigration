@@ -526,7 +526,14 @@
 			{
 				"name": "Upsert assessor users",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get assessor profile",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -538,6 +545,46 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"additionalColumns": [
+							{
+								"name": "IsActive",
+								"value": "false"
+							},
+							{
+								"name": "Role",
+								"value": {
+									"value": "@activity('Get assessor role').output.firstrow.Id",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "UserLicense",
+								"value": ""
+							},
+							{
+								"name": "Profile",
+								"value": {
+									"value": "@activity('Get assessor profile').output.firstrow.Id",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "TimeZoneSidKey",
+								"value": "Australia/Sydney"
+							},
+							{
+								"name": "LocaleSidKey",
+								"value": "en_AU"
+							},
+							{
+								"name": "EmailEncodingKey",
+								"value": "UTF-8"
+							},
+							{
+								"name": "LanguageLocaleKey",
+								"value": "en_US"
+							}
+						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedAssessorUsers]",
 						"queryTimeout": "02:00:00"
 					},
@@ -551,6 +598,148 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AssessorID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "NO_Members_Assessor_ID__c",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "FirstName",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "FirstName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastName",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "LastName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Email",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Email",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Alias",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Alias",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NickName",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CommunityNickname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "IsActive"
+								},
+								"sink": {
+									"name": "IsActive",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"name": "Role"
+								},
+								"sink": {
+									"name": "UserRoleId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Profile"
+								},
+								"sink": {
+									"name": "ProfileId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Username",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Username",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TimeZoneSidKey"
+								},
+								"sink": {
+									"name": "TimeZoneSidKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LocaleSidKey"
+								},
+								"sink": {
+									"name": "LocaleSidKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EmailEncodingKey"
+								},
+								"sink": {
+									"name": "EmailEncodingKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LanguageLocaleKey"
+								},
+								"sink": {
+									"name": "LanguageLocaleKey",
+									"type": "String"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -574,7 +763,14 @@
 			{
 				"name": "Get assessor profile",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get assessor role",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -587,6 +783,30 @@
 					"source": {
 						"type": "SalesforceSource",
 						"query": "select Id from profile where name = 'NO Community Assessor'",
+						"readBehavior": "query"
+					},
+					"dataset": {
+						"referenceName": "sf_user",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Get assessor role",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"query": "select id from UserRole WHERE Name = 'CRM Role'",
 						"readBehavior": "query"
 					},
 					"dataset": {
