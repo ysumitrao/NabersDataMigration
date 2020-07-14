@@ -738,6 +738,17 @@
 									"name": "LanguageLocaleKey",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"name": "SalesforceID",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "ContactId",
+									"type": "String"
+								}
 							}
 						],
 						"typeConversion": true,
