@@ -52,6 +52,22 @@
 									"value": "@activity('Get officer profile').output.firstrow.Id",
 									"type": "Expression"
 								}
+							},
+							{
+								"name": "TimeZoneSidKey",
+								"value": "Australia/Sydney"
+							},
+							{
+								"name": "LocaleSidKey",
+								"value": "en_AU"
+							},
+							{
+								"name": "EmailEncodingKey",
+								"value": "UTF-8"
+							},
+							{
+								"name": "LanguageLocaleKey",
+								"value": "en_US"
 							}
 						],
 						"sqlReaderStoredProcedureName": "[dbo].[usp_GetUpdatedOfficers]",
@@ -160,6 +176,53 @@
 								},
 								"sink": {
 									"name": "ProfileId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Email",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Username",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TimeZoneSidKey"
+								},
+								"sink": {
+									"name": "TimeZoneSidKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LocaleSidKey"
+								},
+								"sink": {
+									"name": "LocaleSidKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EmailEncodingKey"
+								},
+								"sink": {
+									"name": "EmailEncodingKey",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LanguageLocaleKey"
+								},
+								"sink": {
+									"name": "LanguageLocaleKey",
 									"type": "String"
 								}
 							}
