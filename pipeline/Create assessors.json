@@ -544,7 +544,9 @@
 					"sink": {
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
-						"writeBehavior": "insert"
+						"writeBehavior": "upsert",
+						"externalIdFieldName": "NO_Members_Assessor_ID__c",
+						"ignoreNullValues": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -564,7 +566,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "sf_officer",
+						"referenceName": "sf_user",
 						"type": "DatasetReference"
 					}
 				]
