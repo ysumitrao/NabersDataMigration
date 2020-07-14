@@ -140,6 +140,46 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Create contact rating relationship",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create contact rating relationship",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Create officer and rating relationship",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Create ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Create officers and rating relationship",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
