@@ -676,15 +676,6 @@
 							},
 							{
 								"source": {
-									"name": "Role"
-								},
-								"sink": {
-									"name": "UserRoleId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
 									"name": "Profile"
 								},
 								"sink": {
