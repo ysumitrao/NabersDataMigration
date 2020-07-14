@@ -181,8 +181,7 @@
 							},
 							{
 								"source": {
-									"name": "Email",
-									"type": "String",
+									"name": "Username",
 									"physicalType": "varchar"
 								},
 								"sink": {
