@@ -522,11 +522,10 @@
 							},
 							{
 								"source": {
-									"name": "Members_Company_ID__c"
+									"name": "NO_Members_Company_ID__c"
 								},
 								"sink": {
-									"name": "Members_Company_ID__c",
-									"type": "Int32",
+									"name": "NO_Members_Company_ID__c",
 									"physicalType": "int"
 								}
 							}
