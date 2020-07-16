@@ -66,7 +66,7 @@
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
 						"writeBehavior": "upsert",
-						"externalIdFieldName": "NO_Member_Rating_Id__c",
+						"externalIdFieldName": "Members_Rating_ID__c",
 						"ignoreNullValues": false
 					},
 					"enableStaging": false,
@@ -80,8 +80,7 @@
 									"physicalType": "int"
 								},
 								"sink": {
-									"name": "NO_Member_Rating_Id__c",
-									"type": "Decimal"
+									"name": "Members_Rating_ID__c"
 								}
 							},
 							{
@@ -91,8 +90,7 @@
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "NO_Member_Rating_Ref_Number__c",
-									"type": "String"
+									"name": "Members_Rating_Ref_Number__c"
 								}
 							},
 							{
@@ -560,7 +558,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id, NO_Member_Rating_Id__c from\nNO_Rating__c",
+						"query": "select id, Members_Rating_ID__c from\nNO_Rating__c",
 						"readBehavior": "query"
 					},
 					"sink": {
@@ -586,8 +584,7 @@
 							},
 							{
 								"source": {
-									"name": "NO_Member_Rating_Id__c",
-									"type": "Decimal"
+									"name": "Members_Rating_ID__c"
 								},
 								"sink": {
 									"name": "NO_Member_Rating_Id__c",
