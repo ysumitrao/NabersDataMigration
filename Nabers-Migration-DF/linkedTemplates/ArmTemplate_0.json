@@ -510,6 +510,49 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/db_members_building_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PremiseID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "BuildingRatingStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/db_members_contact')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -605,6 +648,53 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/db_members_contact_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Members_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ContactRatingStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/db_members_customer_company')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -667,33 +757,104 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/NabersOnline')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/db_members_officer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "connection to NABERS Online",
-				"annotations": [],
-				"type": "Salesforce",
-				"typeProperties": {
-					"environmentUrl": "[parameters('NabersOnline_properties_typeProperties_environmentUrl')]",
-					"username": "[parameters('NabersOnline_properties_typeProperties_username')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('NabersOnline_password')]"
-					},
-					"securityToken": {
-						"type": "SecureString",
-						"value": "[parameters('NabersOnline_securityToken')]"
-					},
-					"apiVersion": "48.0"
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
 				},
-				"connectVia": {
-					"referenceName": "IR-Nabers-SF",
-					"type": "IntegrationRuntimeReference"
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "AdministratorID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "varchar"
+					},
+					{
+						"name": "LastName",
+						"type": "varchar"
+					},
+					{
+						"name": "Email",
+						"type": "varchar"
+					},
+					{
+						"name": "Alias",
+						"type": "varchar"
+					},
+					{
+						"name": "NickName",
+						"type": "varchar"
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OfficerStage"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/IR-Nabers-SF')]"
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/db_members_officer_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NABERSStaging",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "RatingHeaderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OfficerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RowTimeStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "SalesforceID",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "OfficerRatingStage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
 			]
 		},
 		{
@@ -877,194 +1038,33 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/db_members_building_rating')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/NabersOnline')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NABERSStaging",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "staging"
-				},
+				"description": "connection to NABERS Online",
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "RatingHeaderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "PremiseID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "RowTimeStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesforceID",
-						"type": "varchar"
-					}
-				],
+				"type": "Salesforce",
 				"typeProperties": {
-					"schema": "dbo",
-					"table": "BuildingRatingStage"
+					"environmentUrl": "[parameters('NabersOnline_properties_typeProperties_environmentUrl')]",
+					"username": "[parameters('NabersOnline_properties_typeProperties_username')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('NabersOnline_password')]"
+					},
+					"securityToken": {
+						"type": "SecureString",
+						"value": "[parameters('NabersOnline_securityToken')]"
+					},
+					"apiVersion": "48.0"
+				},
+				"connectVia": {
+					"referenceName": "IR-Nabers-SF",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/db_members_contact_rating')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NABERSStaging",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "RatingHeaderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Members_ID",
-						"type": "varchar"
-					},
-					{
-						"name": "RowTimeStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesforceID",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "ContactRatingStage"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/db_members_officer')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NABERSStaging",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "AdministratorID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FirstName",
-						"type": "varchar"
-					},
-					{
-						"name": "LastName",
-						"type": "varchar"
-					},
-					{
-						"name": "Email",
-						"type": "varchar"
-					},
-					{
-						"name": "Alias",
-						"type": "varchar"
-					},
-					{
-						"name": "NickName",
-						"type": "varchar"
-					},
-					{
-						"name": "RowTimeStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesforceID",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "OfficerStage"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/db_members_officer_rating')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NABERSStaging",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "RatingHeaderID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "OfficerID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "RowTimeStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesforceID",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "OfficerRatingStage"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NABERSStaging')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/IR-Nabers-SF')]"
 			]
 		},
 		{
@@ -1114,6 +1114,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sf_Rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NabersOnline",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "salesforce"
+				},
+				"annotations": [],
+				"type": "SalesforceObject",
+				"schema": [],
+				"typeProperties": {
+					"objectApiName": "NO_Rating__c"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NabersOnline')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sf_assessor_company')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1130,6 +1153,29 @@
 				"schema": [],
 				"typeProperties": {
 					"objectApiName": "Account"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/NabersOnline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sf_building_rating')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "NabersOnline",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "salesforce"
+				},
+				"annotations": [],
+				"type": "SalesforceObject",
+				"schema": [],
+				"typeProperties": {
+					"objectApiName": "NO_Building_Rating_Relationship__c"
 				}
 			},
 			"dependsOn": [
@@ -1160,7 +1206,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sf_customer_company')]",
+			"name": "[concat(parameters('factoryName'), '/sf_contact_rataing')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1175,53 +1221,7 @@
 				"type": "SalesforceObject",
 				"schema": [],
 				"typeProperties": {
-					"objectApiName": "Account"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NabersOnline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sf_Rating')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NabersOnline",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "salesforce"
-				},
-				"annotations": [],
-				"type": "SalesforceObject",
-				"schema": [],
-				"typeProperties": {
-					"objectApiName": "NO_Rating__c"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/NabersOnline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sf_building_rating')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "NabersOnline",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "salesforce"
-				},
-				"annotations": [],
-				"type": "SalesforceObject",
-				"schema": [],
-				"typeProperties": {
-					"objectApiName": "NO_Building_Rating_Relationship__c"
+					"objectApiName": "NO_Rating_Contact__c"
 				}
 			},
 			"dependsOn": [
