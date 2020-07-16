@@ -492,10 +492,11 @@
 							},
 							{
 								"source": {
-									"name": "NO_Members_Assessor_ID__c"
+									"name": "NO_Members_Assessor_ID__c",
+									"type": "Decimal"
 								},
 								"sink": {
-									"name": "Members_Assessor_ID__c",
+									"name": "NO_Members_Assessor_ID__c",
 									"type": "Int32",
 									"physicalType": "int"
 								}
