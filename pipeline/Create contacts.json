@@ -40,7 +40,7 @@
 						"type": "SalesforceSink",
 						"writeBatchSize": 5000,
 						"writeBehavior": "upsert",
-						"externalIdFieldName": "Members_Contact_ID__c",
+						"externalIdFieldName": "NO_Members_Contact_ID__c",
 						"ignoreNullValues": false
 					},
 					"enableStaging": false,
@@ -54,8 +54,7 @@
 									"physicalType": "int"
 								},
 								"sink": {
-									"name": "Members_Contact_ID__c",
-									"type": "Decimal"
+									"name": "NO_Members_Contact_ID__c"
 								}
 							},
 							{
@@ -280,7 +279,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceSource",
-						"query": "select id, Members_Contact_ID__c FROM Contact",
+						"query": "select id, NO_Members_Contact_ID__c FROM Contact",
 						"readBehavior": "query"
 					},
 					"sink": {
@@ -306,12 +305,10 @@
 							},
 							{
 								"source": {
-									"name": "Members_Contact_ID__c",
-									"type": "Decimal"
+									"name": "NO_Members_Contact_ID__c"
 								},
 								"sink": {
-									"name": "Members_Contact_ID__c",
-									"type": "Int32",
+									"name": "NO_Members_Contact_ID__c",
 									"physicalType": "int"
 								}
 							}
