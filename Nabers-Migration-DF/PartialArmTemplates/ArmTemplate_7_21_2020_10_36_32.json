@@ -1,0 +1,44 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nabers-Migration-DF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/NabersOnline')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "connection to NABERS Online",
+				"annotations": [],
+				"type": "Salesforce",
+				"typeProperties": {
+					"environmentUrl": "https://nabers--datamigofc.my.salesforce.com/",
+					"username": "sumit.yadam@nabers.com.datamigofc",
+					"password": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"securityToken": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"apiVersion": "48.0"
+				},
+				"connectVia": {
+					"referenceName": "IR-Nabers-SF",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
