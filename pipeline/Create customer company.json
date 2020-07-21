@@ -240,10 +240,11 @@
 							},
 							{
 								"source": {
-									"name": "NO_Members_Customer_ID__c"
+									"name": "NO_Members_Customer_ID__c",
+									"type": "Decimal"
 								},
 								"sink": {
-									"name": "Members_Customer_ID__c",
+									"name": "NO_Members_Customer_ID__c",
 									"type": "Int32",
 									"physicalType": "int"
 								}
