@@ -584,10 +584,11 @@
 							},
 							{
 								"source": {
-									"name": "Members_Rating_ID__c"
+									"name": "Members_Rating_ID__c",
+									"type": "Decimal"
 								},
 								"sink": {
-									"name": "NO_Member_Rating_Id__c",
+									"name": "Members_Rating_ID__c",
 									"type": "Int32",
 									"physicalType": "int"
 								}
