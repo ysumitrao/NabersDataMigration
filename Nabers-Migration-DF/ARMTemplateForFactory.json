@@ -21,11 +21,11 @@
 		},
 		"NabersOnline_properties_typeProperties_environmentUrl": {
 			"type": "string",
-			"defaultValue": "https://nabers--sumitdm.my.salesforce.com/"
+			"defaultValue": "https://nabers--datamigofc.my.salesforce.com/"
 		},
 		"NabersOnline_properties_typeProperties_username": {
 			"type": "string",
-			"defaultValue": "sumit.yadam@nabers.com.sumitdm"
+			"defaultValue": "sumit.yadam@nabers.com.datamigofc"
 		}
 	},
 	"variables": {
@@ -1307,10 +1307,11 @@
 									},
 									{
 										"source": {
-											"name": "NO_Members_Assessor_ID__c"
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Decimal"
 										},
 										"sink": {
-											"name": "Members_Assessor_ID__c",
+											"name": "NO_Members_Assessor_ID__c",
 											"type": "Int32",
 											"physicalType": "int"
 										}
@@ -1830,7 +1831,7 @@
 									{
 										"source": {
 											"name": "Members_ID__c",
-											"type": "String"
+											"type": "Decimal"
 										},
 										"sink": {
 											"name": "Members_ID__c",
@@ -2291,7 +2292,7 @@
 									{
 										"source": {
 											"name": "Members_ID__c",
-											"type": "String"
+											"type": "Decimal"
 										},
 										"sink": {
 											"name": "Members_ID__c",
@@ -2927,10 +2928,12 @@
 									},
 									{
 										"source": {
-											"name": "NO_Members_Customer_ID__c"
+											"name": "NO_Members_Customer_ID__c",
+											"type": "Decimal"
 										},
 										"sink": {
 											"name": "NO_Members_Customer_ID__c",
+											"type": "Int32",
 											"physicalType": "int"
 										}
 									}
@@ -4111,10 +4114,12 @@
 									},
 									{
 										"source": {
-											"name": "Members_Rating_ID__c"
+											"name": "Members_Rating_ID__c",
+											"type": "Decimal"
 										},
 										"sink": {
 											"name": "Members_Rating_ID__c",
+											"type": "Int32",
 											"physicalType": "int"
 										}
 									}

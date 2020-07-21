@@ -15,10 +15,10 @@
 			"value": ""
 		},
 		"NabersOnline_properties_typeProperties_environmentUrl": {
-			"value": "https://nabers--sumitdm.my.salesforce.com/"
+			"value": "https://nabers--datamigofc.my.salesforce.com/"
 		},
 		"NabersOnline_properties_typeProperties_username": {
-			"value": "sumit.yadam@nabers.com.sumitdm"
+			"value": "sumit.yadam@nabers.com.datamigofc"
 		},
 		"containerUri": {
 			"value": ""

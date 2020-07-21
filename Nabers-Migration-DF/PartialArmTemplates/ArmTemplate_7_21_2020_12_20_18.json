@@ -1,0 +1,2198 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nabers-Migration-DF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Create assessors')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get assessor record type",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": {
+									"value": "Select id from RecordType where sObjectType = 'Contact' and DeveloperName = 'NO_Assessor'",
+									"type": "Expression"
+								},
+								"readBehavior": "query"
+							},
+							"dataset": {
+								"referenceName": "sf_Assessor",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "Upsert assessor",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get assessor record type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "RecordTypeID",
+										"value": {
+											"value": "@activity('Get assessor record type').output.firstrow.Id",
+											"type": "Expression"
+										}
+									}
+								],
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedAssessors]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "NO_Members_Assessor_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "AssessorID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "NO_Members_Assessor_ID__c"
+										}
+									},
+									{
+										"source": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Position",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Position__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Email",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Email",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ShowEmailToPublicFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Show_Email_To_Public__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ShowPhoneToPublicFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Show_Business_Phone_To_Public__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountManagerFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Account_Manager__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "Accreditation",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Accreditation__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "AccreditationNumber",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Accreditation_Number__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "AccreditationExpiryDate",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "NO_Accreditation_Expiry_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "JoinedDate",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "NO_Join_date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CBDFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Share_Info_With_CBD__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "SupervisorFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervisor__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Rating_Types__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RequireSupervisionOffice",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervision_Energy_Offices__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RequireSupervisionSC",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervision_Energy_Shopping_Centres__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RequireSupervisionHotel",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervision_Energy_Hotels__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RequireSupervisionDC",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervision_Energy_Data_Centres__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RequireSupervisionAB",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "NO_Supervision_Energy_AB__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "Metro_Availability",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Metropolitan__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Regional_Availability",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Regional__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingStreet",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "MailingStreet",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingSuburb",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "MailingCity",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingStateCode",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "MailingState",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingPostCode",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "MailingPostalCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingCountry",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "MailingCountry",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingLatitude",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "MailingLatitude",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "MailingLongitude",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "MailingLongitude",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "CompanySalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "AccountId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RecordTypeID"
+										},
+										"sink": {
+											"name": "RecordTypeId",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_assessor",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_Assessor",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert assessor",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, NO_Members_Assessor_ID__c FROM Contact",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInAssessor]",
+								"sqlWriterTableType": "AssessorStageType",
+								"storedProcedureTableTypeParameterName": "AssessorStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_Assessor",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_assessor",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Upsert assessor users",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get assessor profile",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "IsActive",
+										"value": "false"
+									},
+									{
+										"name": "UserLicense",
+										"value": ""
+									},
+									{
+										"name": "Profile",
+										"value": {
+											"value": "@activity('Get assessor profile').output.firstrow.Id",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "TimeZoneSidKey",
+										"value": "Australia/Sydney"
+									},
+									{
+										"name": "LocaleSidKey",
+										"value": "en_AU"
+									},
+									{
+										"name": "EmailEncodingKey",
+										"value": "UTF-8"
+									},
+									{
+										"name": "LanguageLocaleKey",
+										"value": "en_US"
+									}
+								],
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedAssessorUsers]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "NO_Members_Assessor_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "AssessorID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "FirstName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "FirstName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LastName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "LastName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Email",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Email",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Alias",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Alias",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "NickName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "CommunityNickname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IsActive"
+										},
+										"sink": {
+											"name": "IsActive",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "Profile"
+										},
+										"sink": {
+											"name": "ProfileId",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Username",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Username",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TimeZoneSidKey"
+										},
+										"sink": {
+											"name": "TimeZoneSidKey",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LocaleSidKey"
+										},
+										"sink": {
+											"name": "LocaleSidKey",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EmailEncodingKey"
+										},
+										"sink": {
+											"name": "EmailEncodingKey",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LanguageLocaleKey"
+										},
+										"sink": {
+											"name": "LanguageLocaleKey",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ContactId",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_assessor",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_user",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Get assessor profile",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Copy from Salesforce to Staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select Id from profile where name = 'NO Community Assessor'",
+								"readBehavior": "query"
+							},
+							"dataset": {
+								"referenceName": "sf_user",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "Copy assessor user from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert assessor users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, NO_Members_Assessor_ID__c from User",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInAssessorUser]",
+								"sqlWriterTableType": "AssessorUserStageType",
+								"storedProcedureTableTypeParameterName": "AssessorUserStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "NO_Members_Assessor_ID__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_user",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_assessor",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create building rating relationship')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert building ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedBuildingRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "Members_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID"
+										},
+										"sink": {
+											"name": "Members_ID__c"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_building_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_building_rating",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert building ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "SELECT id, Members_ID__c FROM NO_Building_Rating_Relationship__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInBuildingRating]",
+								"sqlWriterTableType": "BuildingRatingStageType",
+								"storedProcedureTableTypeParameterName": "BuildingRatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Members_ID__c",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_building_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_building_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create contact rating relationship')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert contact ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedContactRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "Members_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ContactSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Contact__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "AuthoriseFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "Authorise_Flag__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "PrimaryContactFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "Primary_Contact_Flag__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "RecordStatus",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Request_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Members_ID__c",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_contact_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_contact_rataing",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert contact ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "SELECT id, Members_ID__c FROM NO_Rating_Contact__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInContactRating]",
+								"sqlWriterTableType": "ContactRatingStageType",
+								"storedProcedureTableTypeParameterName": "ContactRatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Members_ID__c",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_contact_rataing",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_contact_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create customer company')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert customer company",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get customer record type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "RecordTypeID",
+										"value": {
+											"value": "@activity('Get customer record type').output.firstrow.Id",
+											"type": "Expression"
+										}
+									}
+								],
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedCustomerCompanies]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "NO_Members_Customer_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RegisteredName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "TradingName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_Short_Name__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ABN",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "NO_ABN__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StreetName",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ShippingStreet"
+										}
+									},
+									{
+										"source": {
+											"name": "Suburb",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ShippingCity",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "StateCode",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ShippingState",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PostCode",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "ShippingPostalCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Country"
+										},
+										"sink": {
+											"name": "ShippingCountry"
+										}
+									},
+									{
+										"source": {
+											"name": "RecordTypeID"
+										},
+										"sink": {
+											"name": "RecordTypeId"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerID"
+										},
+										"sink": {
+											"name": "NO_Members_Customer_ID__c"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_customer_company",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_customer_company",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Get customer record type",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "Select id from RecordType where sObjectType = 'Account' and DeveloperName = 'NO_Customer_Company'",
+								"readBehavior": "query"
+							},
+							"dataset": {
+								"referenceName": "sf_customer_company",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert customer company",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, NO_Members_Customer_ID__c FROM Account",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInCustomerCompany]",
+								"sqlWriterTableType": "CustomerCompanyStageType",
+								"storedProcedureTableTypeParameterName": "CustomerCompanyStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NO_Members_Customer_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "NO_Members_Customer_ID__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_customer_company",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_customer_company",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"variables": {
+					"_defaultCountry": {
+						"type": "String",
+						"defaultValue": "Australia"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create ratings')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "Rating_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Rating_information_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Building_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Customer_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Review_summary_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Area_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Electricity_Data_Clone_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Gas_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Diesel_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Water_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									}
+								],
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "Members_Rating_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingHeaderID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Members_Rating_ID__c"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingReferenceNumber",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Members_Rating_Ref_Number__c"
+										}
+									},
+									{
+										"source": {
+											"name": "PremiseType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingScope",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Scope__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MainPurposeOfRating",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Main_purpose_of_rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestEnergyVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Energy_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestWaterVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Water_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestIEVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_IE_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PublicListingFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "Rating_Publicly_Listed__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingStatus",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingPeriodFrom"
+										},
+										"sink": {
+											"name": "Rating_Start_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "LodgedDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "Lodge_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidFrom",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_From_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidTo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_To_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificationDate",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Certified_On_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_With_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyIntensity",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Intensity__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Greenhouse_Gas_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRatingWoGreenPower",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_Without_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123WoGP",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "No_GreenPower_GHG_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_With_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRatingWoRW",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_Without_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CompanySalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Customer__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingNameOnCertificate"
+										},
+										"sink": {
+											"name": "Building_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerNameOnCertificate"
+										},
+										"sink": {
+											"name": "Customer_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_details_page__c"
+										},
+										"sink": {
+											"name": "Rating_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_information_page__c"
+										},
+										"sink": {
+											"name": "Rating_information_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Building_details_page__c"
+										},
+										"sink": {
+											"name": "Building_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer_details_page__c"
+										},
+										"sink": {
+											"name": "Customer_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Review_summary_page__c"
+										},
+										"sink": {
+											"name": "Review_summary_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Area_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Area_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Electricity_Data_Clone_Status__c"
+										},
+										"sink": {
+											"name": "Electricity_Data_Clone_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Gas_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Gas_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Diesel_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Diesel_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Water_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Water_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "POReferenceNo"
+										},
+										"sink": {
+											"name": "Reference_For_Invoicing__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DataAccuracyFlag"
+										},
+										"sink": {
+											"name": "Assessor_Declaration__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "ConflictOfInterestFlag"
+										},
+										"sink": {
+											"name": "Conflict_Of_Interest__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InComplianceWithCurrentRules"
+										},
+										"sink": {
+											"name": "Compliant_With_Rules__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ComplianceExplanation"
+										},
+										"sink": {
+											"name": "Explain_Why_Not_Compliant__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerAwareOfStarRating"
+										},
+										"sink": {
+											"name": "Customer_Aware_Of_Star_Rating__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "AssessorUserSalesforceID"
+										},
+										"sink": {
+											"name": "OwnerId",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, Members_Rating_ID__c from\nNO_Rating__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInRating]",
+								"sqlWriterTableType": "RatingStageType",
+								"storedProcedureTableTypeParameterName": "RatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_Rating_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Members_Rating_ID__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/NabersOnline')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "connection to NABERS Online",
+				"annotations": [],
+				"type": "Salesforce",
+				"typeProperties": {
+					"environmentUrl": "https://nabers--datamigofc.my.salesforce.com/",
+					"username": "sumit.yadam@nabers.com.datamigofc",
+					"password": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"securityToken": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"apiVersion": "48.0"
+				},
+				"connectVia": {
+					"referenceName": "IR-Nabers-SF",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

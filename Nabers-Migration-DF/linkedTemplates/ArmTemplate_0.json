@@ -21,11 +21,11 @@
 		},
 		"NabersOnline_properties_typeProperties_environmentUrl": {
 			"type": "string",
-			"defaultValue": "https://nabers--sumitdm.my.salesforce.com/"
+			"defaultValue": "https://nabers--datamigofc.my.salesforce.com/"
 		},
 		"NabersOnline_properties_typeProperties_username": {
 			"type": "string",
-			"defaultValue": "sumit.yadam@nabers.com.sumitdm"
+			"defaultValue": "sumit.yadam@nabers.com.datamigofc"
 		}
 	},
 	"variables": {
