@@ -131,7 +131,7 @@
 							{
 								"source": {
 									"name": "Members_ID__c",
-									"type": "String"
+									"type": "Decimal"
 								},
 								"sink": {
 									"name": "Members_ID__c",
