@@ -90,7 +90,7 @@
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Members_Rating_Ref_Number__c"
+									"name": "Rating_Reference_Number__c"
 								}
 							},
 							{
