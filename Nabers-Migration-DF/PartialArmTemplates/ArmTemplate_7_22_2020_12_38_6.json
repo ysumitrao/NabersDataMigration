@@ -1,0 +1,639 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nabers-Migration-DF"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Create ratings')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Upsert ratings",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"additionalColumns": [
+									{
+										"name": "Rating_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Rating_information_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Building_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Customer_details_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Review_summary_page__c",
+										"value": "complete"
+									},
+									{
+										"name": "Area_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Electricity_Data_Clone_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Gas_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Diesel_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									},
+									{
+										"name": "Water_Data_Copy_Status__c",
+										"value": "Copy rejected"
+									}
+								],
+								"sqlReaderStoredProcedureName": "[[dbo].[usp_GetUpdatedRatings]",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SalesforceSink",
+								"writeBatchSize": 5000,
+								"writeBehavior": "upsert",
+								"externalIdFieldName": "Members_Rating_ID__c",
+								"ignoreNullValues": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RatingHeaderID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Members_Rating_ID__c"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingReferenceNumber",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Reference_Number__c"
+										}
+									},
+									{
+										"source": {
+											"name": "PremiseType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingType",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Type__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingScope",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Rating_Scope__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "MainPurposeOfRating",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Main_purpose_of_rating__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestEnergyVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Energy_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestWaterVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_Water_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "UsingLatestIEVersion",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Using_Latest_IE_Rules_Version__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PublicListingFlag",
+											"type": "Boolean",
+											"physicalType": "bit"
+										},
+										"sink": {
+											"name": "Rating_Publicly_Listed__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingStatus",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RatingPeriodFrom"
+										},
+										"sink": {
+											"name": "Rating_Start_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "LodgedDate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "Lodge_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidFrom",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_From_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificateValidTo",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Valid_To_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "CertificationDate",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Certified_On_Date__c",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_With_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyIntensity",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Intensity__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Greenhouse_Gas_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "EnergyStarRatingWoGreenPower",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Energy_Star_Rating_Without_Green_Power__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "GHGEmissionsScope123WoGP",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "No_GreenPower_GHG_Emissions_Scope_123__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRating",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_With_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "WaterStarRatingWoRW",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Water_Star_Rating_Without_Recycled_Water__c",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingSalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Building__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CompanySalesforceID",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Customer__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BuildingNameOnCertificate"
+										},
+										"sink": {
+											"name": "Building_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerNameOnCertificate"
+										},
+										"sink": {
+											"name": "Customer_Name_On_Certificate__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_details_page__c"
+										},
+										"sink": {
+											"name": "Rating_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Rating_information_page__c"
+										},
+										"sink": {
+											"name": "Rating_information_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Building_details_page__c"
+										},
+										"sink": {
+											"name": "Building_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer_details_page__c"
+										},
+										"sink": {
+											"name": "Customer_details_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Review_summary_page__c"
+										},
+										"sink": {
+											"name": "Review_summary_page__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Area_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Area_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Electricity_Data_Clone_Status__c"
+										},
+										"sink": {
+											"name": "Electricity_Data_Clone_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Gas_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Gas_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Diesel_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Diesel_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Water_Data_Copy_Status__c"
+										},
+										"sink": {
+											"name": "Water_Data_Copy_Status__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "POReferenceNo"
+										},
+										"sink": {
+											"name": "Reference_For_Invoicing__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DataAccuracyFlag"
+										},
+										"sink": {
+											"name": "Assessor_Declaration__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "ConflictOfInterestFlag"
+										},
+										"sink": {
+											"name": "Conflict_Of_Interest__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "InComplianceWithCurrentRules"
+										},
+										"sink": {
+											"name": "Compliant_With_Rules__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ComplianceExplanation"
+										},
+										"sink": {
+											"name": "Explain_Why_Not_Compliant__c",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomerAwareOfStarRating"
+										},
+										"sink": {
+											"name": "Customer_Aware_Of_Star_Rating__c",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "AssessorUserSalesforceID"
+										},
+										"sink": {
+											"name": "OwnerId",
+											"type": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Copy from Salesforce to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Upsert ratings",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SalesforceSource",
+								"query": "select id, Members_Rating_ID__c from\nNO_Rating__c",
+								"readBehavior": "query"
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[usp_UpdateSalesforceIDInRating]",
+								"sqlWriterTableType": "RatingStageType",
+								"storedProcedureTableTypeParameterName": "RatingStage"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Members_Rating_ID__c",
+											"type": "Decimal"
+										},
+										"sink": {
+											"name": "Members_Rating_ID__c",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sf_Rating",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "db_members_rating",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
