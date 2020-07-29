@@ -3856,6 +3856,14 @@
 											"name": "OwnerId",
 											"type": "String"
 										}
+									},
+									{
+										"source": {
+											"name": "IEStarRating"
+										},
+										"sink": {
+											"name": "Indoor_Environment_Star_Rating__c"
+										}
 									}
 								],
 								"typeConversion": true,
